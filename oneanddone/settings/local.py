@@ -106,19 +106,18 @@ INTERNAL_IPS = ('127.0.0.1', )
 # # EMAIL_HOST = 'smtp.mozilla.org'
 # # SERVER_EMAIL= 'dev@oneanddone.allizom.org'
 #
-# # Caching
+# Caching
 # CACHES = {
 #     'default': {
 #         'BACKEND': 'caching.backends.locmem.CacheClass',
 #         'TIMEOUT': 60,
 #     },
 # }
-#
-# # CACHES = {
-# #     'default': {
-# #         'BACKEND': 'caching.backends.memcached.MemcachedCache',
-# #         'LOCATION': '127.0.0.1:11211',
-# #         'TIMEOUT': 600,
-# #     }
-# # }
-#
+
+CACHES = {
+    'default': {
+        'BACKEND': 'caching.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+        'TIMEOUT': 600,
+    }
+}

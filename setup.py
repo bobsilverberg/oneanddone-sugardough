@@ -1,10 +1,15 @@
-#!/usr/bin/env python
+from setuptools import setup, find_packages
 
-from distutils.core import setup
 
 setup(name='oneanddone',
-      version='0.1dev',
-      description='This is https://github.com/mozilla/oneanddone',
-      author='Mozilla QA',
+      version='1.0',
+      description='Django application.',
+      long_description='',
+      author='',
       author_email='',
-      url='https://github.com/mozilla/oneanddone')
+      license='',
+      url='',
+      include_package_data=True,
+      classifiers=[],
+      packages=find_packages(exclude=['tests']),
+      install_requires=[])
