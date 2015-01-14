@@ -1,0 +1,128 @@
+#!/usr/bin/env python
+import logging
+import os
+import sys
+from itertools import chain
+
+current_settings = None
+execute_from_command_line = None
+log = logging.getLogger(__name__)
+ROOT = None
+
+
+def path(*a):
+    if ROOT is None:
+        _not_setup()
+    return os.path.join(ROOT, *a)
+
+
+# Taken from peep
+class EmptyOptions(object):
+    """Fake optparse options for compatibility with pip<1.2
+
+    pip<1.2 had a bug in parse_requirments() in which the ``options`` kwarg
+    was required. We work around that by passing it a mock object.
+
+    """
+    default_vcs = None
+    skip_requirements_regex = None
+    isolated_mode = False
+
+
+def check_dependencies():
+    """Check installed requirements vs. specified requirements
+
+    This prints out a list of dependencies where the version installed
+    is not the same as the one specified in the requirements files.
+
+    It also exits immediately. At some point we might want to change
+    it from doing that, but not today.
+
+    If you want to skip this check, set SKIP_CHECK=1 in your
+    environment.
+
+    .. Note::
+
+       This only works for packaged requirements. It does not work for
+       requirements downloaded in a tarball from github. Those
+       requirements get put in the "unsatisfyable" requirements list
+       and this will tell you how many there are.
+
+       Generally we should minimize those requirements as much as
+       possible.
+
+    """
+    # Import this here because not all environments have pip.
+    from pip.req import parse_requirements
+    from pip.download import PipSession
+
+    req_path = path('requirements')
+    req_files = [os.path.join(req_path, fn) for fn in os.listdir(req_path)]
+
+    reqs = list(chain(*(parse_requirements(path,
+                                           options=EmptyOptions(),
+                                           session=PipSession())
+                        for path in req_files)))
+
+    unsatisfied_reqs = []
+    unsatisfyable_reqs = []
+    for req in reqs:
+        if req.url and 'github.com' in req.url:
+            unsatisfyable_reqs.append(req)
+            continue
+
+        req.check_if_exists()
+
+        if not req.satisfied_by:
+            unsatisfied_reqs.append(req)
+
+    if unsatisfyable_reqs:
+        print 'There are %d requirements that cannot be checked.' % (
+            len(unsatisfyable_reqs))
+
+    if unsatisfied_reqs:
+        print 'The following requirements are not satsifed:'
+        print ''
+
+        for req in unsatisfied_reqs:
+            print 'UNSATISFIED:', req.req
+
+        print ''
+        print 'Update your virtual environment by doing:'
+        print ''
+        print '    ./peep install -r requirements/requirements.txt'
+        print ''
+        print 'or run with SKIP_CHECK=1 .'
+        sys.exit(1)
+
+
+def setup_environ(manage_file):
+    """Sets up a Django app within a manage.py file"""
+    # sys is global to avoid undefined local
+    global sys, current_settings, execute_from_command_line, ROOT
+
+    ROOT = os.path.dirname(os.path.abspath(manage_file))
+
+    # Adjust the python path and put local packages in front.
+    prev_sys_path = list(sys.path)
+
+    # Make root application importable without the need for
+    # python setup.py install|develop
+    sys.path.append(ROOT)
+
+    from django.core.management import execute_from_command_line  # noqa
+
+    from oneanddone.settings import local as settings
+    current_settings = settings
+
+
+def _not_setup():
+    raise EnvironmentError(
+        'setup_environ() has not been called for this process')
+
+
+def main(argv=None):
+    if current_settings is None:
+        _not_setup()
+    argv = argv or sys.argv
+    execute_from_command_line(argv)
