@@ -125,9 +125,6 @@ html5lib==0.999
 # sha256: QYqTw5en7asj5ViNvAZ6x0pyPts9VBvUk295R252Rdo
 six==1.9.0
 
-# sha256: dtc21mshK7f_QmPUVCGmVgcjTD_7SHp9q-39JgzXAu4
-django-memcached2==0.2
-
 # sha256: sGqGRRqZ1sJr-mUIKZnb9ljgh-WW6SkszmiLU-q6qto
 django-sha2==0.4
 
@@ -158,6 +155,3 @@ https://github.com/jbalogh/django-multidb-router/archive/f6ff9379eef9dceffbb7bfd
 
 # sha256: uUMeohGZBz7HGJQTjybYoIOh0XNpND3isezYVNLIYV0
 https://github.com/jbalogh/jingo/archive/fce09043542e71d972cc97d2ae703740741f80d0.zip#egg=jingo
-
-# sha256: 3iikArgI8BalcaY4Ve46Tu6c2AVKbxlCnm_g0XCZaw4
-https://github.com/jbalogh/django-cache-machine/archive/f827f05b195ad3fc1b0111131669471d843d631f.zip#egg=caching

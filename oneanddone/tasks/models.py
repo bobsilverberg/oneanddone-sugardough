@@ -18,7 +18,7 @@ import jinja2
 from markdown import markdown
 from tower import ugettext as _
 
-from oneanddone.base.models import CachedModel, CreatedByModel, CreatedModifiedModel
+from oneanddone.base.models import CreatedByModel, CreatedModifiedModel
 from oneanddone.tasks.bugzilla_utils import BugzillaUtils
 
 
@@ -31,7 +31,7 @@ class BugzillaBug(models.Model):
         return ' '.join(['Bug', str(self.bugzilla_id)])
 
 
-class Feedback(CachedModel, CreatedModifiedModel):
+class Feedback(CreatedModifiedModel):
     attempt = models.OneToOneField('TaskAttempt')
     text = models.TextField()
 
@@ -40,7 +40,7 @@ class Feedback(CachedModel, CreatedModifiedModel):
             user=self.attempt.user, task=self.attempt.task)
 
 
-class TaskAttempt(CachedModel, CreatedModifiedModel):
+class TaskAttempt(CreatedModifiedModel):
     task = models.ForeignKey('Task', related_name='taskattempt_set')
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
 
@@ -123,7 +123,7 @@ class TaskAttempt(CachedModel, CreatedModifiedModel):
         ordering = ['-modified']
 
 
-class TaskKeyword(CachedModel, CreatedModifiedModel, CreatedByModel):
+class TaskKeyword(CreatedModifiedModel, CreatedByModel):
     task = models.ForeignKey('Task', related_name='keyword_set')
 
     name = models.CharField(max_length=255, verbose_name='keyword')
@@ -295,28 +295,28 @@ class TaskMetrics(CreatedModifiedModel):
         ordering = ['-completed_users']
 
 
-class TaskProject(CachedModel, CreatedModifiedModel, CreatedByModel):
+class TaskProject(CreatedModifiedModel, CreatedByModel):
     name = models.CharField(max_length=255)
 
     def __unicode__(self):
         return self.name
 
 
-class TaskTeam(CachedModel, CreatedModifiedModel, CreatedByModel):
+class TaskTeam(CreatedModifiedModel, CreatedByModel):
     name = models.CharField(max_length=255)
 
     def __unicode__(self):
         return self.name
 
 
-class TaskType(CachedModel, CreatedModifiedModel, CreatedByModel):
+class TaskType(CreatedModifiedModel, CreatedByModel):
     name = models.CharField(max_length=255)
 
     def __unicode__(self):
         return self.name
 
 
-class Task(CachedModel, CreatedModifiedModel, CreatedByModel):
+class Task(CreatedModifiedModel, CreatedByModel):
     """
     Task for a user to attempt to fulfill.
     """

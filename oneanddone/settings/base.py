@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     'commonware.response.cookies',
     'django_ace',
     'django_browserid',
-    'django_memcached',
     'django_nose',
     'jingo_minify',
     'product_details',
@@ -405,11 +404,6 @@ def _request_args():
         'backgroundColor': '#E0DDD4',
     }
 BROWSERID_REQUEST_ARGS = lazy(_request_args, dict)()
-
-# CacheMachine config
-CACHE_COUNT_TIMEOUT = 60  # seconds, not too long.
-
-DJANGO_MEMCACHED_REQUIRE_STAFF = True
 
 # Project-specific Settings
 ##############################################################################

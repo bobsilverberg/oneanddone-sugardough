@@ -33,8 +33,6 @@ urlpatterns = patterns('',
 
     (r'', include('django_browserid.urls')),
 
-    (r'^cache/', include('django_memcached.urls')),
-
     # Generate robots.txt
     (r'^robots\.txt$',
         lambda r: HttpResponse(
